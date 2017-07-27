@@ -1,4 +1,4 @@
-<p align="center">## FX</p>
+## <p align="center">FX</p>
 
 Este projeto serve para calcular o valor de uma função em um determinado ponto
 x, sendo que esta função é passada por uma string digitada pelo usuario.
