@@ -1,1 +1,1 @@
-g++ -std=c++11 fx.cpp -o fx.exe
+g++ -std=c++11 fx.cpp main.cpp -o main.exe
