@@ -10,7 +10,8 @@ int main(){
 	cout<<endl<<"digite o valor de x: ";cin>>x;
 	cout<<endl<<"Please wait!\nif it take to long press 'ctrl+c'"<<endl<<endl<<endl;
 	try{
-		double y=f_x(x,foo);  
+		string fc = clean_fx(foo);		
+		double y=f_x(x,fc);  
 		cout<<"f(x) = "<<foo<<endl;
 		cout<<"f("<<x<<") = "<<y<<endl;
 	}catch (std::exception& e){

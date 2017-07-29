@@ -4,6 +4,22 @@
 
 #include "fx.h"
 
+std::string clean_fx(std::string f){
+	for(int i=0;i<f.size();i++){
+		if(f[i]=='-'){
+			if(i==0){
+				f.replace(i,1,"#");
+			}else{
+				f.replace(i,1,"+#");
+			}
+			#ifdef DEBUG
+				std::cout<<f<<std::endl;	//debug
+			#endif
+		}//else if(f[i] == ' ') f.erase(i, 1);
+	}
+	return f;
+}
+
 double toDouble(std::string s){
 	return (s[0]=='#'? -std::stod(s.substr(1,s.size())):stod(s));
 }
@@ -17,6 +33,7 @@ double fatorial(double d){
 
 double f_x(double x, std::string f){
 	if(f=="x") return x;
+	if(f=="#x") return -x;
 	int np=0,pos;
 	for(int i=0;i<f.size();i++){
 		if(f[i]=='('){
@@ -57,19 +74,7 @@ double f_x(double x, std::string f){
 			std::cout<<"isalpha"<<std::endl;
 		#endif
 		}
-	}
-	for(int i=0;i<f.size();i++){
-		if(f[i]=='-'){
-			if(i==0){
-				f.replace(i,1,"#");
-			}else{
-				f.replace(i,1,"+#");
-			}
-			#ifdef DEBUG
-				std::cout<<f<<std::endl;	//debug
-			#endif
-		}
-	}
+	}	
 	for(int i=0;i<f.size();i++){
 		if(f[i]=='+') return f_x(x,f.substr(0,i)) + f_x(x,f.substr(i+1,f.size()-i));
 		//if(f[i]=='-' && i!=0) return f_x(x,f.substr(0,i)) - f_x(x,f.substr(i+1,f.size()-i ) );
