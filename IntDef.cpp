@@ -1,8 +1,16 @@
 #include <iostream>
 #include <cmath>
+#include <thread>
+#include <vector>
 #include "fx.h"
 
 using namespace std;
+
+void IntDef(string func, double start, double end, double dx, double *res){
+	res[0]=0;
+	for(double x=start; x<end; x+=dx)
+		res[0]+=f_x(x,func)*dx;
+}
 
 int main(){
 	string foo;
@@ -26,9 +34,22 @@ int main(){
 	cout<<endl<<"Please wait!\nif it take to long press 'ctrl+c'"<<endl<<endl<<endl;
 	try{
 		string fc = clean_fx(foo);
-		double sum=0;
-		for(double x=(inverso?xf:xi); x<(inverso?xi:xf); x+=dx)
-			sum+=f_x(x,fc)*dx;
+		
+		int nTh = thread::hardware_concurrency();
+		//se não estier usando todas as thread de seu PC substitua a função pelo numero de thread
+		//para er o numero de thread descomente a linha de baixo
+		//cout<<"numero de thread: "<<nTh<<endl;
+		
+		double sum=0, dist, res[nTh];
+		dist = (inverso?xi-xf:xf-xi)/nTh;
+		vector<thread> th;
+		for(int i=0; i<nTh; i++)
+			th.push_back(thread(IntDef, fc, (inverso?xf:xi)+dist*i, (inverso?xf:xi)+dist*(i+1), dx, &res[i]));
+		
+		for(int i=0; i<nTh; i++){
+			th[i].join();
+			sum += res[i];
+		}
 		if(inverso) sum = -sum;
 		//cout<<"f(x) = "<<fc<<endl;
 		cout<<"integral de "<<foo<<" de "<<xi<<" a "<<xf<<" = "<<sum<<endl;

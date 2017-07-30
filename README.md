@@ -39,7 +39,8 @@ programa.
 * Informe o limite superior
 * Informe a precisão (dx = 1/10^precisão)
 * Aguarde o precessamento, se demorar demais precione 'ctrl+c' para encerar o 
-programa.
+programa. (essa etapa usa processamento paralelo, não se assuste se os coolers 
+ficarem no máximo)
 
 
 # May The Force Be With You
