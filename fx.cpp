@@ -5,7 +5,7 @@
 #include "fx.h"
 
 std::string clean_fx(std::string f){
-	for(int i=0;i<f.size();i++){
+	for(int i=0; i<f.size(); i++){
 		if(f[i]=='-'){
 			if(i==0){
 				f.replace(i,1,"#");
@@ -35,7 +35,7 @@ double f_x(double x, std::string f){
 	if(f=="x") return x;
 	if(f=="#x") return -x;
 	int np=0,pos;
-	for(int i=0;i<f.size();i++){
+	for(int i=0; i<f.size(); i++){
 		if(f[i]=='('){
 			if(np==0)pos=i;
 			np++;

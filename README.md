@@ -20,8 +20,11 @@ Muitas distros já posuem o g++. Caso você não tenha pasta abrir um terminal e
 digitar "apt-get install g++". Para erificar se o g++ esta instalado digite 
 "g++ --version".
 Com o g++ já instalado, basta digitar os comandos:
-"g++ -std=c++11 fx.cpp main.cpp -o main.exe" e
-"g++ -std=c++11 fx.cpp IntDef.cpp -o IntDef.exe"
+"g++ -std=c++11 fx.cpp main.cpp -o main.exe",
+"g++ -std=c++11 fx.cpp IntDef.cpp -o IntDef.exe" e
+"g++ -std=c++11 df_x.cpp -o df_x.exe"
+(são os mesmos ccomando que estão no arquio 'compile.bat')
+
 
 ## Calcular f(x)
 
@@ -41,6 +44,13 @@ programa.
 * Aguarde o precessamento, se demorar demais precione 'ctrl+c' para encerar o 
 programa. (essa etapa usa processamento paralelo, não se assuste se os coolers 
 ficarem no máximo)
+
+## Derivar f(x)		(lista de funcoes ainda meio limitada)
+
+* Abra o IntDef.exe
+* Informe a função
+* Aguarde o precessamento 
+(o simbolo '#' significa um que o numero posterior é negatio)
 
 
 # May The Force Be With You
