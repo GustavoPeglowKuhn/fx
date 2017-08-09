@@ -20,8 +20,23 @@ std::string clean_fx(std::string f){
 	return f;
 }
 
+std::string unclean_fx(std::string f){
+	for(int i=0; i<f.size(); i++){
+		if(f[i]=='+' && f[i]=='#'){
+			f.replace(i,2,"-");
+		}else if(f[i]=='#'){
+			f.replace(i,1,"-");
+		}
+	}
+	#ifdef DEBUG
+		std::cout<<f<<std::endl;	//debug
+	#endif
+	return f;
+}
+
 double toDouble(std::string s){
-	return (s[0]=='#'? -std::stod(s.substr(1,s.size())):stod(s));
+	//return (s[0]=='-'? -std::stod(s.substr(1,s.size())):std::stod(s));
+	return (s[0]=='#'? -std::stod(s.substr(1,s.size())):std::stod(s));
 }
 
 double fatorial(double d){
@@ -31,7 +46,7 @@ double fatorial(double d){
 	return res;
 }
 
-double f_x(double x, std::string f){
+double fx(double x, std::string f){
 	if(f=="x") return x;
 	if(f=="#x") return -x;
 	int np=0,pos;
@@ -49,7 +64,7 @@ double f_x(double x, std::string f){
 					#endif
 				}else{
 					double d;
-					d = f_x(x,f.substr(pos+1,i-pos-1));
+					d = fx(x,f.substr(pos+1,i-pos-1));
 					f.replace(pos,i-pos+1,std::to_string(d));	//inicio, tamanho, outra string
 					#ifdef DEBUG
 						std::cout<<f<<std::endl;	//debug
@@ -76,15 +91,15 @@ double f_x(double x, std::string f){
 		}
 	}	
 	for(int i=0;i<f.size();i++){
-		if(f[i]=='+') return f_x(x,f.substr(0,i)) + f_x(x,f.substr(i+1,f.size()-i));
-		//if(f[i]=='-' && i!=0) return f_x(x,f.substr(0,i)) - f_x(x,f.substr(i+1,f.size()-i ) );
+		if(f[i]=='+') return fx(x,f.substr(0,i)) + fx(x,f.substr(i+1,f.size()-i));
+		//if(f[i]=='-' && i!=0) return fx(x,f.substr(0,i)) - fx(x,f.substr(i+1,f.size()-i ) );
 	}
 	for(int i=0;i<f.size();i++){
-		if(f[i]=='*') return f_x(x,f.substr(0,i)) * f_x(x,f.substr(i+1,f.size()-i));
-		if(f[i]=='/') return f_x(x,f.substr(0,i)) / f_x(x,f.substr(i+1,f.size()-i));
+		if(f[i]=='*') return fx(x,f.substr(0,i)) * fx(x,f.substr(i+1,f.size()-i));
+		if(f[i]=='/') return fx(x,f.substr(0,i)) / fx(x,f.substr(i+1,f.size()-i));
 	}
 	for(int i=0;i<f.size();i++){
-		if(f[i]=='^') return pow(f_x(x,f.substr(0,i)), f_x(x,f.substr(i+1,f.size()-i)));
+		if(f[i]=='^') return pow(fx(x,f.substr(0,i)), fx(x,f.substr(i+1,f.size()-i)));
 	}
 	#ifdef DEBUG
 		std::cout << "returnning stod of "<<f<<std::endl;

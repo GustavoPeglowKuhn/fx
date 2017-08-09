@@ -1,49 +1,10 @@
-#include "df_x.h"
+#include "dfx.h"
 
 #ifndef DEBUG
 	//#define DEBUG		//uncoment to display function comentaries
 #endif
 
-//ex: (2*x)^2+x
-//separa em '(2*x)^2' e 'x'
-
-std::string clean_fx(std::string f){
-	for(int i=0; i<f.size(); i++){
-		if(f[i]=='-'){
-			if(i==0){
-				f.replace(i,1,"#");
-			}else{
-				f.replace(i,1,"+#");
-			}
-			#ifdef DEBUG
-				std::cout<<f<<std::endl;	//debug
-			#endif
-		}//else if(f[i] == ' ') f.erase(i, 1);
-	}
-	return f;
-}
-
-std::string unclean_fx(std::string f){
-	for(int i=0; i<f.size(); i++){
-		if(f[i]=='+' && f[i]=='#'){
-			f.replace(i,2,"-");
-		}else if(f[i]=='#'){
-			f.replace(i,1,"-");
-		}
-	}
-	#ifdef DEBUG
-		std::cout<<f<<std::endl;	//debug
-	#endif
-	return f;
-}
-
-double toDouble(std::string s){
-	//return (s[0]=='-'? -std::stod(s.substr(1,s.size())):std::stod(s));
-	return (s[0]=='#'? -std::stod(s.substr(1,s.size())):std::stod(s) );
-}
-
-std::string d_f_x(std::string f){
-	
+std::string dfx(std::string f){
 	#ifdef DEBUG
 		std::cout<<"f(x): "<<f<<std::endl;	//debug
 	#endif
@@ -54,6 +15,8 @@ std::string d_f_x(std::string f){
 	int np=0;
 	
 	//derivada da soma (propriedade: a derivada das somas é a soma das deriadas)
+	//ex: (2*x)^2+x
+	//separa em '(2*x)^2' e 'x'
 	for(int i=0; i<f.size(); i++){
 		if(f[i]=='('){
 			np++;
@@ -61,7 +24,7 @@ std::string d_f_x(std::string f){
 			np--;
 			if(np<0) throw -1;	//throw SintaxeException("Impossible to solve "+func);
 		}else if(np==0 && f[i]=='+'){
-			std::string a=d_f_x(f.substr(0,i)), b=d_f_x(f.substr(i+1,f.size()-i-1));
+			std::string a=dfx(f.substr(0,i)), b=dfx(f.substr(i+1,f.size()-i-1));
 			if(a=="0"){
 				if(b=="0"){
 					return "0";
@@ -87,7 +50,7 @@ std::string d_f_x(std::string f){
 			np--;
 			if(np<0) throw -1;	//throw SintaxeException("Impossible to solve "+func);
 		}else if(np==0 && f[i]=='*'){
-			string a = f.substr(0, i), b = f.substr(i+1, f.size()-i-1);
+			std::string a = f.substr(0, i), b = f.substr(i+1, f.size()-i-1);
 			double ad, bd;
 			try{					//usa try-catch para ver ser é uma constante
 				ad = toDouble(a);
@@ -95,7 +58,7 @@ std::string d_f_x(std::string f){
 					bd = toDouble(b);
 					return "0";			//(k1*k2)' = (k)' = 0
 				}catch (std::exception& e){
-					b=d_f_x(b);
+					b=dfx(b);
 					if(b=="0") return "0";
 					if(b=="1") return a;
 					return a+"*"+b;	//(k*g_x)' = k*(g_x)'
@@ -103,12 +66,12 @@ std::string d_f_x(std::string f){
 			}catch (std::exception& e){
 				try{
 					bd = toDouble(b);
-					a=d_f_x(a);
+					a=dfx(a);
 					if(a=="0") return "0";
 					if(a=="1") return b;
 					return b+"*"+a;		//(g_x*k)' = k*(g_x)'
 				}catch (std::exception& e){
-					string d_a=d_f_x(a), d_b=d_f_x(b);
+					std::string d_a=dfx(a), d_b=dfx(b);
 					//(g_x*h_x)' = g_x*(h_x)'+(g_x)'*h_x
 					return a+(d_b=="1"? "" :"*"+d_b) +"+"+ (d_a=="1"? "" :d_a+"*")+b;
 				}
@@ -127,7 +90,7 @@ std::string d_f_x(std::string f){
 			np--;
 			if(np<0) throw -1;	//throw SintaxeException("Impossible to solve "+func);
 		}else if(np==0 && f[i]=='^'){
-			string a = f.substr(0,i), b = f.substr(i+1,f.size()-i-1);
+			std::string a = f.substr(0,i), b = f.substr(i+1,f.size()-i-1);
 			double ad, bd;
 			try{					//usa try-catch para ver ser é uma constante
 				ad = toDouble(a);
@@ -136,17 +99,17 @@ std::string d_f_x(std::string f){
 					return "0";			//(k1^k2)' = (k)' = 0
 				}catch (std::exception& e){
 					throw -1;	//throw SintaxeException("Impossible to solve "+func);
-					//return ad*d_f_x(b);	//(k^g_x)' = ?	tem que ver
+					//return ad*dfx(b);	//(k^g_x)' = ?	tem que ver
 				}
 			}catch (std::exception& e){
 				try{
-					bd = toDouble(b)-1;	//to_string(bd) == b
-					string d_a = d_f_x(a);
+					bd = toDouble(b)-1;	//std::to_string(bd) == b
+					std::string d_a = dfx(a);
 							//(g_x^k)' = k*(g_x)^(k-1)*(g_x)'
-					return (b!="1"? b+"*" : "")+a+(bd==1? "" : "^"+to_string(bd))+(d_a=="1"?"":"*"+d_f_x(a));
+					return (b!="1"? b+"*" : "")+a+(bd==1? "" : "^"+std::to_string(bd))+(d_a=="1"?"":"*"+dfx(a));
 				}catch (std::exception& e){
 					throw -1;	//throw SintaxeException("Impossible to solve "+func);
-					//return b*d_f_x(a)+a*d_f_x(b);	//(g_x^h_x)' = ?
+					//return b*dfx(a)+a*dfx(b);	//(g_x^h_x)' = ?
 				}
 			}
 		}
@@ -174,7 +137,7 @@ std::string d_f_x(std::string f){
 							for(int j=i+4; j<f.size(); j++){
 								if(f[j]==')'){
 									if(n==0){
-										string s=f.substr(i+4, j-i-4), ds=d_f_x(s), res="";
+										std::string s=f.substr(i+4, j-i-4), ds=dfx(s), res="";
 										if(ds=="0") return "0";
 										//if(i>0 && f[i-1]=='#' && ds[0]!='#') res="#";
 										if(i>0 && f[i-1]=='#') res="#";
@@ -196,7 +159,7 @@ std::string d_f_x(std::string f){
 							for(int j=i+4; j<f.size(); j++){
 								if(f[j]==')'){
 									if(n==0){
-										string s=f.substr(i+4, j-i-4), ds=d_f_x(s), res;
+										std::string s=f.substr(i+4, j-i-4), ds=dfx(s), res;
 										if(ds=="0") return "0";
 										//if(i>0 && f[i-1]!='#' && ds[0]!='#') res="#";
 										if(i==0) res="#";
@@ -204,7 +167,7 @@ std::string d_f_x(std::string f){
 										res+="sin("+s+")";
 										return res;
 										
-										//string s=f.substr(i, j-i), ds=d_f_x(s);
+										//std::string s=f.substr(i, j-i), ds=dfx(s);
 										//if(ds=="0") return "0";
 										//if(i>0 && f[i-1]=='#')
 										//	return "sin"+s+"*"+ds;
@@ -224,7 +187,7 @@ std::string d_f_x(std::string f){
 							for(int j=i+4; j<f.size(); j++){
 								if(f[j]==')'){
 									if(n==0){
-										string s=f.substr(i, j-i), ds=d_f_x(s);
+										std::string s=f.substr(i, j-i), ds=dfx(s);
 										if(ds=="0") return "0";
 										if(i>0 && f[i-1]=='#')
 											return "#exp"+s+"*"+ds;
@@ -257,25 +220,3 @@ std::string d_f_x(std::string f){
 	//é uma constante, a derivada é 0
 	return "0";
 }
-
-int main(){
-	string func;
-	cout<<"func: "; cin>>func;
-	cout<<endl;
-	
-	try{
-		string d_func = d_f_x(func);
-		cout<<"("<<func<<")' = "<<d_func<<endl;
-	}catch(exception &e){
-		cout<<"NOP"<<endl<<"not today"<<endl;
-	}catch(int i){
-		cout<<"erro "<<i<<endl;
-		cout<<"Algo errado na sintaxe ou esta funcao ainda nao foi implementada"<<endl;
-		cout<<"Verifique se este ssoftware esta atualizado"<<endl;
-	}
-	
-	return 0;
-}
-
-
-

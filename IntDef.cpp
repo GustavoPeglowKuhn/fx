@@ -9,7 +9,7 @@ using namespace std;
 void IntDef(string func, double start, double end, double dx, double *res){
 	res[0]=0;
 	for(double x=start; x<end; x+=dx)
-		res[0]+=f_x(x,func)*dx;
+		res[0]+=fx(x,func)*dx;
 }
 
 int main(){

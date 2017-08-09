@@ -11,7 +11,7 @@ int main(){
 	cout<<endl<<"Please wait!\nif it take to long press 'ctrl+c'"<<endl<<endl<<endl;
 	try{
 		string fc = clean_fx(foo);		//'prepara' a string para facilitar o processamento
-		double y=f_x(x,fc);
+		double y=fx(x,fc);
 		cout<<"f(x) = "<<foo<<endl;
 		cout<<"f("<<x<<") = "<<y<<endl;
 	}catch (std::exception& e){
